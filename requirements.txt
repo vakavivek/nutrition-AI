@@ -1,13 +1,14 @@
-# Backend-only dependencies. Keep the CLIP model and embeddings unchanged.
+# Backend-only dependencies. CLIP model and vector dimensions are unchanged.
 fastapi
 uvicorn
 python-multipart
 python-dotenv
+numpy
 pandas
 openpyxl
-numpy
 Pillow
 torch
 transformers
+accelerate
 langchain
 langchain_mistralai
