@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: nutrition-ai-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: MISTRAL_API_KEY
+        sync: false
+
+  - type: web
+    name: nutrition-ai-frontend
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements-front.txt
+    startCommand: streamlit run front.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: API_URL
+        value: https://${{nutrition-ai-api.host}}
