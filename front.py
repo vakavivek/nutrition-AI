@@ -7,7 +7,11 @@ import requests
 
 # Set API_URL in the deployment environment to your public FastAPI URL.
 # When running locally, the app falls back to the local backend.
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8091").rstrip("/")
+try:
+    API_URL = st.secrets["API_URL"]
+except Exception:
+    API_URL = os.getenv("API_URL", "http://127.0.0.1:8091")
+API_URL = API_URL.rstrip("/")
 
 st.set_page_config("Food Nutrition Assistant")
 st.title("🍎 Food Nutrition Assistant")
