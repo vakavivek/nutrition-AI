@@ -17,6 +17,12 @@ app.add_middleware(
 STATE_STORE = {}
 
 
+@app.get("/health")
+def health():
+    # Lightweight check; intentionally does not load the ML pipeline.
+    return {"status": "ok", "service": "nutrition-ai-api"}
+
+
 @app.post("/analyze-image")
 async def analyze_image(file: UploadFile | None = File(None),text:str|None = Form(None)):
     image_bytes = await file.read() if file else None
