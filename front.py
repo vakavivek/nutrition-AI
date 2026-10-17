@@ -1,9 +1,13 @@
 # front.py
 
+import os
+
 import streamlit as st
 import requests
 
-API_URL = "http://127.0.0.1:8091"
+# Set API_URL in the deployment environment to your public FastAPI URL.
+# When running locally, the app falls back to the local backend.
+API_URL = os.getenv("API_URL", "http://127.0.0.1:8091").rstrip("/")
 
 st.set_page_config("Food Nutrition Assistant")
 st.title("🍎 Food Nutrition Assistant")
@@ -42,7 +46,7 @@ if (uploaded or text_input) and st.button("Analyze"):
             else:
                 st.error(data.get("message", "Unable to analyze this food."))
         except requests.exceptions.Timeout:
-            st.error("Backend is not responding. Restart the Spring Boot server and try again.")
+            st.error("The nutrition backend is taking too long to respond. Please try again in a moment.")
         except requests.exceptions.RequestException as exc:
             st.error(f"Could not connect to backend: {exc}")
 
