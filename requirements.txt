@@ -1,20 +1,13 @@
-langgraph
-langchain
-typing_extensions
-torch
-transformers
-pillow
-ultralytics
-torchvision
-scikit-learn
-opencv-python
+# Backend-only dependencies. Keep the CLIP model and embeddings unchanged.
 fastapi
 uvicorn
-python-dotenv
 python-multipart
+python-dotenv
 pandas
 openpyxl
-streamlit
-requests
+numpy
+Pillow
+torch
+transformers
+langchain
 langchain_mistralai
-faiss-cpu
