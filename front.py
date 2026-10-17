@@ -35,7 +35,7 @@ if (uploaded or text_input) and st.button("Analyze"):
                 f"{API_URL}/analyze-image",
                 files=files,
                 data=data,
-                timeout=15
+                timeout=120
             )
             res.raise_for_status()
             data = res.json()
@@ -66,7 +66,7 @@ if st.session_state.options:
                         "state_id": st.session_state.state_id,
                         "food": opt
                     },
-                    timeout=15
+                    timeout=120
                 )
                 res.raise_for_status()
                 st.session_state.result = res.json()
