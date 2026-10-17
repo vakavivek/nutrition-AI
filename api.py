@@ -4,7 +4,6 @@ from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 import uuid
 
-from pipeline import analyze_image_pipeline
 
 app = FastAPI()
 
@@ -21,6 +20,10 @@ STATE_STORE = {}
 @app.post("/analyze-image")
 async def analyze_image(file: UploadFile | None = File(None),text:str|None = Form(None)):
     image_bytes = await file.read() if file else None
+
+    # Load PyTorch/Transformers/CLIP only when a real request arrives.
+    # This lets FastAPI start and bind its port on low-memory hosts.
+    from pipeline import analyze_image_pipeline
 
     result = analyze_image_pipeline(image=image_bytes,text=text)
 
