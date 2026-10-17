@@ -21,4 +21,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.11
       - key: API_URL
-        value: https://${{nutrition-ai-api.host}}
+        fromService:
+          type: web
+          name: nutrition-ai-api
+          envVarKey: RENDER_EXTERNAL_URL
