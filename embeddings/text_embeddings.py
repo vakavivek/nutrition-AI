@@ -1,26 +1,18 @@
-import torch
 import numpy as np
-from transformers import CLIPModel,CLIPProcessor
+import torch
 
-DEVICE="cuda" if torch.cuda.is_available() else "cpu"
+from embeddings.clip_model import get_clip
 
-model= CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(DEVICE)
-processor= CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-def embed_text(text:str)->np.ndarray:
-    inputs=processor(
-        text=[text],
-        return_tensors="pt",
-        padding=True
-    ).to(DEVICE)
+def embed_text(text: str) -> np.ndarray:
+    model, processor = get_clip()
+    inputs = processor(text=[text], return_tensors="pt", padding=True, truncation=True)
 
-    with torch.no_grad():
-        text_features= model.get_text_features(**inputs)
+    with torch.inference_mode():
+        features = model.get_text_features(**inputs)
 
-    # Transformers 5 returns a model output object; older versions returned
-    # the projected feature tensor directly.
-    if hasattr(text_features, "pooler_output"):
-        text_features = text_features.pooler_output
+    if hasattr(features, "pooler_output"):
+        features = features.pooler_output
 
-    text_features=text_features/text_features.norm(dim=-1,keepdim=True)
-    return text_features.cpu().numpy()[0]
+    features = features / features.norm(dim=-1, keepdim=True).clamp_min(1e-12)
+    return features.cpu().numpy()[0].astype(np.float32)
